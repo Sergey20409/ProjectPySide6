@@ -28,7 +28,6 @@ class Window(QtWidgets.QWidget, Ui_Form):
         super().__init__(parent)
 
         self.setupUi(self)
-        self.settings = QtCore.QSettings("setSettings")
         self.initUi()
         self.initSignals()
 
@@ -41,14 +40,14 @@ class Window(QtWidgets.QWidget, Ui_Form):
         return super().closeEvent(event)
 
     def __loadSettings(self):
-
-        self.comboBox.setCurrentText(self.settings.value("comboBox", ""))
-        self.lcdNumber.display(self.settings.value("lcdNumber", ""))
-        self.dial.setValue(int(self.settings.value("lcdNumber", "")))
+        settings = QtCore.QSettings("setSettings")
+        self.comboBox.setCurrentText(settings.value("comboBox", ""))
+        self.lcdNumber.display(settings.value("lcdNumber", ""))
 
     def __saveSettings(self):
-        self.settings.setValue("comboBox", self.comboBox.currentText())
-        self.settings.setValue("lcdNumber", self.lcdNumber.value())
+        settings = QtCore.QSettings("setSettings")
+        settings.setValue("comboBox", self.comboBox.currentText())
+        settings.setValue("lcdNumber", self.lcdNumber.value())
 
     def initUi(self):
         dialog_boxes = [
