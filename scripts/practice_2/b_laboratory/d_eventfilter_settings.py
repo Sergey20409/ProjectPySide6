@@ -28,10 +28,16 @@ class Window(QtWidgets.QWidget, Ui_Form):
         super().__init__(parent)
 
         self.setupUi(self)
+        self.settings = QtCore.QSettings("setSettings")
         self.initUi()
+        self.timerShot = QtCore.QTimer()
+        self.timerShot.setInterval(200)
         self.initSignals()
-
         self.__loadSettings()
+        self.timerShot.start()
+
+    def changeLCD(self):
+        self.dial.setValue(self.dial.value()+1)
 
     def closeEvent(self, event):
 
@@ -43,11 +49,15 @@ class Window(QtWidgets.QWidget, Ui_Form):
         settings = QtCore.QSettings("setSettings")
         self.comboBox.setCurrentText(settings.value("comboBox", ""))
         self.lcdNumber.display(settings.value("lcdNumber", ""))
+        self.dial.setValue(int(settings.value("dial", "")))
+        self.horizontalSlider.setValue(int(settings.value("horizontalSlider", "")))
 
     def __saveSettings(self):
         settings = QtCore.QSettings("setSettings")
         settings.setValue("comboBox", self.comboBox.currentText())
         settings.setValue("lcdNumber", self.lcdNumber.value())
+        settings.setValue("dial", self.dial.value())
+        settings.setValue("horizontalSlider", self.horizontalSlider.value())
 
     def initUi(self):
         dialog_boxes = [
@@ -73,6 +83,7 @@ class Window(QtWidgets.QWidget, Ui_Form):
        self.dial.valueChanged.connect(self.horizontalSlider.setValue)
        self.dial.valueChanged.connect(self.lcdNumber.display)
        self.comboBox.currentTextChanged.connect(self.setLcdMode)
+       # self.timerShot.timeout.connect(self.changeLCD)
 
     def setLcdMode(self):
         if self.comboBox.currentText() == "Oct":
